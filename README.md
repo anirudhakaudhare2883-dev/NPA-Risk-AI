@@ -148,21 +148,33 @@ The ensemble models such as Random Forest and Gradient Boosting achieved the bes
 
 # 📸 Project Screenshots
 
-## 🏠 Dashboard
+## 🏠 Home
 
-<img width="100%" src="images/dashboard.png" />
+<img width="1387" height="777" alt="image" src="https://github.com/user-attachments/assets/e821445e-1b7b-4b62-9eab-a47e17df5b4b" />
+
+##  Dashboard
+
+<img width="1384" height="728" alt="image" src="https://github.com/user-attachments/assets/79153e25-d8fe-4c5b-b09d-3068cb41acd9" />
+
 
 ---
 
 ## 📊 Risk Prediction Output
 
-<img width="100%" src="images/prediction.png" />
+<img width="873" height="802" alt="image" src="https://github.com/user-attachments/assets/af292c5c-ff06-41b7-8ad8-55005f2b9ab1" />
+
 
 ---
 
 ## 🧠 System Architecture
 
-<img width="100%" src="images/architecture.png" />
+<img width="1090" height="671" alt="image" src="https://github.com/user-attachments/assets/66e67cb5-030b-4fa1-9860-525333470127" />
+
+## Developer page
+
+<img width="1399" height="765" alt="image" src="https://github.com/user-attachments/assets/79e9b71f-e009-42d6-b714-d7425f592101" />
+
+
 
 ---
 
