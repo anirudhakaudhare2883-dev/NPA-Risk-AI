@@ -1,0 +1,608 @@
+{% extends "base.html" %}
+{% block title %}Meet the Developer | Bhat Bank AI{% endblock %}
+
+{% block content %}
+<style>
+    /* ================================================
+       DEVELOPER PAGE — CYBERPUNK DARK THEME
+       ================================================ */
+    
+    .dev-hero {
+        background: linear-gradient(-45deg, #020617, #0B192C, #0f172a, #1e1b4b, #020617);
+        background-size: 400% 400%;
+        animation: gradientShift 12s ease infinite;
+        color: white;
+        padding: 6rem 2rem 12rem 2rem;
+        text-align: center;
+        position: relative;
+        overflow: hidden;
+        border-bottom: 2px solid rgba(0, 212, 255, 0.3);
+    }
+    .dev-hero::before {
+        content: '';
+        position: absolute;
+        top: 0; left: 0; right: 0; bottom: 0;
+        background: radial-gradient(ellipse at 30% 20%, rgba(0, 212, 255, 0.08) 0%, transparent 50%),
+                    radial-gradient(ellipse at 70% 80%, rgba(168, 85, 247, 0.08) 0%, transparent 50%);
+        pointer-events: none;
+    }
+    .dev-hero .container { position: relative; z-index: 2; }
+
+    .dev-hero-title {
+        font-family: 'Outfit', sans-serif;
+        font-weight: 800;
+        font-size: 3.5rem;
+        letter-spacing: -1px;
+        background: linear-gradient(135deg, #ffffff 0%, #00d4ff 50%, #a855f7 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+    }
+    .dev-hero-subtitle {
+        font-size: 1.2rem;
+        color: rgba(255, 255, 255, 0.5);
+        letter-spacing: 3px;
+        text-transform: uppercase;
+        font-weight: 500;
+    }
+
+    /* Profile Card — Dark Glassmorphism */
+    .dev-profile-card {
+        background: rgba(15, 23, 42, 0.85);
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
+        border: 1px solid rgba(0, 212, 255, 0.15);
+        border-radius: 24px;
+        padding: 3rem 2.5rem 2.5rem 2.5rem;
+        text-align: center;
+        position: relative;
+        margin-top: -100px;
+        z-index: 10;
+        transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4),
+                    0 0 30px rgba(0, 212, 255, 0.05);
+    }
+    .dev-profile-card:hover {
+        transform: translateY(-8px);
+        border-color: rgba(0, 212, 255, 0.35);
+        box-shadow: 0 25px 70px rgba(0, 0, 0, 0.5),
+                    0 0 50px rgba(0, 212, 255, 0.1);
+    }
+
+    /* Profile Image */
+    .dev-img-wrap {
+        width: 200px; height: 200px;
+        margin: -110px auto 1.5rem auto;
+        border-radius: 50%;
+        padding: 5px;
+        background: linear-gradient(135deg, #00d4ff, #a855f7, #00d4ff);
+        background-size: 200% 200%;
+        animation: gradientShift 4s ease infinite;
+        position: relative;
+        box-shadow: 0 0 30px rgba(0, 212, 255, 0.25),
+                    0 0 60px rgba(168, 85, 247, 0.15);
+    }
+    .dev-img-wrap img {
+        width: 100%; height: 100%;
+        object-fit: cover;
+        border-radius: 50%;
+        border: 4px solid #0f172a;
+    }
+
+    /* Floating animation for profile */
+    .dev-img-float {
+        animation: float 5s ease-in-out infinite;
+    }
+
+    /* Role Badge */
+    .dev-role-badge {
+        display: inline-block;
+        padding: 0.5rem 1.75rem;
+        border-radius: 50px;
+        font-weight: 700;
+        font-size: 0.85rem;
+        letter-spacing: 1.5px;
+        text-transform: uppercase;
+        color: #00d4ff;
+        background: rgba(0, 212, 255, 0.08);
+        border: 1px solid rgba(0, 212, 255, 0.2);
+        margin-bottom: 1.25rem;
+    }
+
+    /* Developer Name */
+    .dev-name {
+        font-family: 'Outfit', sans-serif;
+        font-weight: 800;
+        font-size: 2.8rem;
+        color: #ffffff;
+        letter-spacing: -0.5px;
+        margin-bottom: 0.5rem;
+    }
+
+    /* Info Row */
+    .dev-info-row {
+        display: flex;
+        justify-content: center;
+        gap: 2rem;
+        flex-wrap: wrap;
+        margin-bottom: 1.75rem;
+        color: rgba(255, 255, 255, 0.5);
+        font-size: 1.05rem;
+    }
+    .dev-info-row .info-item {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+    .dev-info-row .info-item i {
+        color: var(--neon-blue);
+    }
+    .dev-info-row .info-value {
+        color: rgba(255, 255, 255, 0.85);
+        font-weight: 600;
+    }
+    .dev-info-divider {
+        color: rgba(255, 255, 255, 0.15);
+    }
+
+    /* Social Buttons */
+    .dev-social-btn {
+        width: 52px; height: 52px;
+        border-radius: 14px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.3rem;
+        color: white;
+        text-decoration: none;
+        transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        background: rgba(255, 255, 255, 0.05);
+    }
+    .dev-social-btn:hover {
+        color: white;
+        transform: translateY(-5px) scale(1.1);
+    }
+    .dev-social-btn.linkedin:hover {
+        background: #0077b5;
+        border-color: #0077b5;
+        box-shadow: 0 8px 25px rgba(0, 119, 181, 0.4);
+    }
+    .dev-social-btn.github:hover {
+        background: #6e40c9;
+        border-color: #6e40c9;
+        box-shadow: 0 8px 25px rgba(110, 64, 201, 0.4);
+    }
+    .dev-social-btn.email:hover {
+        background: #ea4335;
+        border-color: #ea4335;
+        box-shadow: 0 8px 25px rgba(234, 67, 53, 0.4);
+    }
+
+    /* About Me Section */
+    .dev-about-text {
+        color: rgba(255, 255, 255, 0.6);
+        font-size: 1.15rem;
+        line-height: 1.85;
+        max-width: 750px;
+        margin: 0 auto;
+    }
+    .dev-about-text strong {
+        color: var(--neon-blue);
+    }
+
+    /* Section Title for dark bg */
+    .dev-section-title {
+        font-family: 'Outfit', sans-serif;
+        font-weight: 700;
+        font-size: 1.35rem;
+        color: #ffffff;
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        margin-bottom: 1.5rem;
+    }
+    .dev-section-title i {
+        color: var(--neon-blue);
+        font-size: 1.1rem;
+    }
+
+    /* Dark Info Box */
+    .dev-info-box {
+        background: rgba(15, 23, 42, 0.7);
+        backdrop-filter: blur(12px);
+        -webkit-backdrop-filter: blur(12px);
+        border: 1px solid rgba(0, 212, 255, 0.1);
+        border-radius: 16px;
+        padding: 2.25rem;
+        height: 100%;
+        transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+    }
+    .dev-info-box:hover {
+        border-color: rgba(0, 212, 255, 0.25);
+        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3),
+                    0 0 20px rgba(0, 212, 255, 0.06);
+        transform: translateY(-4px);
+    }
+
+    /* List items in dark theme */
+    .dev-list-item {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        padding: 0.9rem 0;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+        color: rgba(255, 255, 255, 0.7);
+        font-size: 1.05rem;
+    }
+    .dev-list-item:last-child { border-bottom: none; }
+    .dev-list-item i {
+        color: #10b981;
+        font-size: 1rem;
+        width: 20px;
+        text-align: center;
+    }
+    .dev-list-item b {
+        color: rgba(255, 255, 255, 0.9);
+    }
+
+    /* Highlight Card (Dark) */
+    .dev-highlight-card {
+        display: flex;
+        align-items: center;
+        gap: 1.25rem;
+        background: rgba(255, 255, 255, 0.03);
+        border: 1px solid rgba(255, 255, 255, 0.06);
+        padding: 1.25rem 1.5rem;
+        border-radius: 14px;
+        margin-bottom: 1rem;
+        transition: all 0.3s;
+    }
+    .dev-highlight-card:hover {
+        background: rgba(0, 212, 255, 0.05);
+        border-color: rgba(0, 212, 255, 0.2);
+        transform: translateX(6px);
+    }
+    .dev-highlight-card:last-child { margin-bottom: 0; }
+    .dev-highlight-icon {
+        width: 50px; height: 50px;
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.4rem;
+        flex-shrink: 0;
+    }
+    .dev-highlight-card h6 {
+        color: rgba(255, 255, 255, 0.9);
+        font-weight: 700;
+        margin-bottom: 0.2rem;
+        font-size: 1.05rem;
+    }
+    .dev-highlight-card span {
+        color: rgba(255, 255, 255, 0.45);
+        font-size: 0.9rem;
+    }
+
+    /* Skill Badge (Dark Neon) */
+    .dev-skill-badge {
+        background: rgba(255, 255, 255, 0.03);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        color: rgba(255, 255, 255, 0.75);
+        padding: 0.7rem 1.4rem;
+        border-radius: 12px;
+        font-weight: 600;
+        font-size: 0.95rem;
+        transition: all 0.25s cubic-bezier(0.25, 0.8, 0.25, 1);
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        cursor: default;
+    }
+    .dev-skill-badge i {
+        font-size: 1.2rem;
+        color: var(--neon-blue);
+        transition: all 0.25s;
+    }
+    .dev-skill-badge:hover {
+        background: rgba(0, 212, 255, 0.1);
+        border-color: rgba(0, 212, 255, 0.4);
+        color: #ffffff;
+        transform: translateY(-4px) scale(1.03);
+        box-shadow: 0 8px 20px rgba(0, 212, 255, 0.15);
+    }
+    .dev-skill-badge:hover i {
+        color: #ffffff;
+        text-shadow: 0 0 10px rgba(0, 212, 255, 0.5);
+    }
+
+    /* Dark page background override */
+    .dev-page-bg {
+        background: #020617;
+        margin: -2.5rem -1.5rem;
+        padding: 0;
+    }
+    .dev-content-section {
+        padding: 0 1.5rem 4rem 1.5rem;
+        background: linear-gradient(180deg, #020617 0%, #0B192C 50%, #020617 100%);
+    }
+
+    /* Gold accent top border for info box */
+    .dev-info-box.gold-top {
+        border-top: 3px solid rgba(197, 160, 89, 0.6);
+    }
+
+    @media (max-width: 768px) {
+        .dev-hero-title { font-size: 2.2rem; }
+        .dev-name { font-size: 2rem; }
+        .dev-info-row { gap: 1rem; font-size: 0.9rem; }
+        .dev-profile-card { padding: 2rem 1.5rem 2rem 1.5rem; margin-top: -80px; }
+        .dev-img-wrap { width: 160px; height: 160px; margin-top: -90px; }
+    }
+</style>
+
+<div class="dev-page-bg">
+
+    <!-- 1. HERO SECTION with animated gradient -->
+    <div class="dev-hero">
+        <div class="particle-container" id="particleCanvas"></div>
+        <div class="container animate-fade-up">
+            <h1 class="dev-hero-title mb-3">Meet the Developer</h1>
+            <p class="dev-hero-subtitle">
+                <span id="typingText"></span><span class="typing-cursor"></span>
+            </p>
+        </div>
+    </div>
+
+    <div class="dev-content-section">
+        <div class="container pb-5">
+
+            <div class="row justify-content-center px-3">
+                <!-- 2. PROFILE CARD -->
+                <div class="col-lg-10 col-xl-9">
+                    <div class="dev-profile-card animate-fade-up delay-1">
+
+                        <div class="dev-img-wrap dev-img-float">
+                            <img src="{{ url_for('static', filename='profile.jpg') }}" alt="Anirudha Kaudhare"
+                                onerror="this.src='https://ui-avatars.com/api/?name=Anirudha+Kaudhare&background=0B192C&color=00d4ff&size=200'">
+                        </div>
+
+                        <div class="dev-role-badge"><i class="fa-solid fa-code me-2"></i>Lead Architect & Developer</div>
+                        <h1 class="dev-name">Anirudha Kaudhare</h1>
+
+                        <div class="dev-info-row">
+                            <div class="info-item">
+                                <i class="fa-solid fa-graduation-cap"></i>
+                                <span class="info-value">Roll: 332</span>
+                            </div>
+                            <span class="dev-info-divider d-none d-md-inline">|</span>
+                            <div class="info-item">
+                                <i class="fa-solid fa-building-columns"></i>
+                                <span>Guru Nanak Khalsa College, Matunga</span>
+                            </div>
+                        </div>
+
+                        <div class="d-flex justify-content-center gap-3 mb-4 pb-4" style="border-bottom: 1px solid rgba(255,255,255,0.06);">
+                            <a href="https://www.linkedin.com/in/anirudha-kaudhare/" target="_blank" class="dev-social-btn linkedin">
+                                <i class="fa-brands fa-linkedin-in"></i>
+                            </a>
+                            <a href="https://github.com/anirudhakaudhare2883-dev" target="_blank" class="dev-social-btn github">
+                                <i class="fa-brands fa-github"></i>
+                            </a>
+                            <a href="mailto:anirudhakaudhare2883@gmail.com" class="dev-social-btn email">
+                                <i class="fa-solid fa-envelope"></i>
+                            </a>
+                        </div>
+
+                        <!-- About Me -->
+                        <div class="text-center mt-3 px-md-4">
+                            <h3 class="dev-section-title justify-content-center">
+                                <i class="fa-solid fa-user-astronaut"></i> About Me
+                            </h3>
+                            <p class="dev-about-text">
+                                I am an MSc student passionate about <strong>Machine Learning</strong> and
+                                data-driven solutions. This project focuses on predicting Non-Performing Assets using AI to
+                                fundamentally improve banking risk decision-making operations.
+                            </p>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+            <!-- 3. ROLE & HIGHLIGHTS ROW -->
+            <div class="row g-4 mt-4 justify-content-center animate-fade-up delay-2">
+
+                <!-- Role & Strategy -->
+                <div class="col-lg-5 col-xl-4 d-flex">
+                    <div class="dev-info-box w-100">
+                        <h4 class="dev-section-title">
+                            <i class="fa-solid fa-code-branch"></i> Role & Strategy
+                        </h4>
+                        <div class="mt-2">
+                            <div class="dev-list-item">
+                                <i class="fa-solid fa-check"></i>
+                                <span>Built ML model (<b>Random Forest</b>)</span>
+                            </div>
+                            <div class="dev-list-item">
+                                <i class="fa-solid fa-check"></i>
+                                <span>Developed <b>Flask</b> web app API</span>
+                            </div>
+                            <div class="dev-list-item">
+                                <i class="fa-solid fa-check"></i>
+                                <span>Designed frontend <b>dashboard</b></span>
+                            </div>
+                            <div class="dev-list-item">
+                                <i class="fa-solid fa-check"></i>
+                                <span>Implemented <b>prediction system</b></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Technical Highlights -->
+                <div class="col-lg-5 col-xl-5 d-flex">
+                    <div class="dev-info-box gold-top w-100">
+                        <h4 class="dev-section-title">
+                            <i class="fa-solid fa-star" style="color: var(--bank-gold);"></i> Technical Highlights
+                        </h4>
+
+                        <div class="dev-highlight-card mt-2">
+                            <div class="dev-highlight-icon" style="background: rgba(0, 212, 255, 0.1); color: var(--neon-blue);">
+                                <i class="fa-solid fa-brain"></i>
+                            </div>
+                            <div>
+                                <h6>AI-powered prediction</h6>
+                                <span>High-accuracy classification</span>
+                            </div>
+                        </div>
+
+                        <div class="dev-highlight-card">
+                            <div class="dev-highlight-icon" style="background: rgba(16, 185, 129, 0.1); color: #10b981;">
+                                <i class="fa-solid fa-bolt"></i>
+                            </div>
+                            <div>
+                                <h6>Real-time risk analysis</h6>
+                                <span>Instant JSON assessment mapping</span>
+                            </div>
+                        </div>
+
+                        <div class="dev-highlight-card">
+                            <div class="dev-highlight-icon" style="background: rgba(197, 160, 89, 0.1); color: var(--bank-gold);">
+                                <i class="fa-solid fa-chart-pie"></i>
+                            </div>
+                            <div>
+                                <h6>Interactive dashboard</h6>
+                                <span>Dynamic Power BI-style KPIs</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- 4. SKILLS SECTION -->
+            <div class="row mt-5 pt-4 pb-4 justify-content-center animate-fade-up delay-3" style="border-top: 1px solid rgba(255,255,255,0.05);">
+                <div class="col-lg-10 col-xl-9 text-center">
+                    <h3 class="dev-section-title justify-content-center mb-4">
+                        <i class="fa-solid fa-layer-group"></i> Specialized Skills
+                    </h3>
+                    <div class="d-flex flex-wrap justify-content-center gap-3 mt-3">
+                        <span class="dev-skill-badge"><i class="fa-brands fa-python"></i> Python Core</span>
+                        <span class="dev-skill-badge"><i class="fa-solid fa-robot"></i> Machine Learning</span>
+                        <span class="dev-skill-badge"><i class="fa-solid fa-pepper-hot"></i> Flask Framework</span>
+                        <span class="dev-skill-badge"><i class="fa-solid fa-database"></i> Data Analysis</span>
+                        <span class="dev-skill-badge"><i class="fa-brands fa-html5"></i> HTML5/CSS3</span>
+                        <span class="dev-skill-badge"><i class="fa-solid fa-chart-line"></i> Chart.js Data Viz</span>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+// ---- TYPING ANIMATION ----
+(function() {
+    const phrases = [
+        'Creator of the NPA Prediction System',
+        'Machine Learning Engineer',
+        'Full-Stack AI Developer',
+        'MSc Computer Science Student'
+    ];
+    let phraseIdx = 0, charIdx = 0, isDeleting = false;
+    const el = document.getElementById('typingText');
+    if (!el) return;
+
+    function type() {
+        const current = phrases[phraseIdx];
+        if (isDeleting) {
+            el.textContent = current.substring(0, charIdx - 1);
+            charIdx--;
+        } else {
+            el.textContent = current.substring(0, charIdx + 1);
+            charIdx++;
+        }
+
+        let delay = isDeleting ? 35 : 65;
+
+        if (!isDeleting && charIdx === current.length) {
+            delay = 2200;
+            isDeleting = true;
+        } else if (isDeleting && charIdx === 0) {
+            isDeleting = false;
+            phraseIdx = (phraseIdx + 1) % phrases.length;
+            delay = 400;
+        }
+        setTimeout(type, delay);
+    }
+    setTimeout(type, 800);
+})();
+
+// ---- PARTICLE BACKGROUND ----
+(function() {
+    const container = document.getElementById('particleCanvas');
+    if (!container) return;
+
+    const canvas = document.createElement('canvas');
+    container.appendChild(canvas);
+    const ctx = canvas.getContext('2d');
+
+    function resize() {
+        canvas.width = container.offsetWidth;
+        canvas.height = container.offsetHeight;
+    }
+    resize();
+    window.addEventListener('resize', resize);
+
+    const particles = [];
+    const count = Math.min(60, Math.floor(container.offsetWidth / 20));
+
+    for (let i = 0; i < count; i++) {
+        particles.push({
+            x: Math.random() * canvas.width,
+            y: Math.random() * canvas.height,
+            vx: (Math.random() - 0.5) * 0.4,
+            vy: (Math.random() - 0.5) * 0.4,
+            r: Math.random() * 2 + 0.5,
+            alpha: Math.random() * 0.4 + 0.1
+        });
+    }
+
+    function draw() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        particles.forEach((p, i) => {
+            p.x += p.vx; p.y += p.vy;
+            if (p.x < 0 || p.x > canvas.width) p.vx *= -1;
+            if (p.y < 0 || p.y > canvas.height) p.vy *= -1;
+
+            ctx.beginPath();
+            ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+            ctx.fillStyle = `rgba(0, 212, 255, ${p.alpha})`;
+            ctx.fill();
+
+            // Connect nearby particles
+            for (let j = i + 1; j < particles.length; j++) {
+                const dx = p.x - particles[j].x;
+                const dy = p.y - particles[j].y;
+                const dist = Math.sqrt(dx * dx + dy * dy);
+                if (dist < 120) {
+                    ctx.beginPath();
+                    ctx.moveTo(p.x, p.y);
+                    ctx.lineTo(particles[j].x, particles[j].y);
+                    ctx.strokeStyle = `rgba(0, 212, 255, ${0.08 * (1 - dist / 120)})`;
+                    ctx.lineWidth = 0.5;
+                    ctx.stroke();
+                }
+            }
+        });
+        requestAnimationFrame(draw);
+    }
+    draw();
+})();
+</script>
+{% endblock %}

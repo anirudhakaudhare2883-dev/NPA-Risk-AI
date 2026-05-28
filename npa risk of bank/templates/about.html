@@ -1,0 +1,233 @@
+{% extends "base.html" %}
+{% block title %}About NPA | NPA Risk AI{% endblock %}
+
+{% block content %}
+<style>
+    .hero-section {
+        background: linear-gradient(-45deg, #020617, #0B192C, #0f172a, #1e1b4b);
+        background-size: 300% 300%;
+        animation: gradientShift 10s ease infinite;
+        color: white;
+        padding: 5.5rem 2rem;
+        text-align: center;
+        margin-bottom: 3.5rem;
+        border-bottom: 1px solid rgba(0, 212, 255, 0.15);
+        position: relative;
+        overflow: hidden;
+    }
+    .hero-section::before {
+        content: '';
+        position: absolute; top: 0; left: 0; right: 0; bottom: 0;
+        background: radial-gradient(ellipse at 30% 50%, rgba(0, 212, 255, 0.05) 0%, transparent 60%);
+        pointer-events: none;
+    }
+    .hero-section .container { position: relative; z-index: 2; }
+
+    .highlight-keyword {
+        color: var(--neon-blue);
+        font-weight: 800;
+        text-shadow: 0 0 20px rgba(0, 212, 255, 0.3);
+    }
+
+    .flow-container {
+        display: flex; align-items: center; justify-content: center;
+        flex-wrap: wrap; gap: 1.5rem; margin: 2rem 0;
+    }
+    .flow-box {
+        background: var(--bg-card);
+        border: 1px solid rgba(255,255,255,0.06);
+        border-radius: 14px;
+        padding: 1.5rem 2rem;
+        font-weight: 700; font-size: 1.1rem;
+        color: rgba(255,255,255,0.8);
+        box-shadow: var(--shadow-card);
+        text-align: center; min-width: 200px;
+        transition: var(--transition);
+        backdrop-filter: blur(10px);
+    }
+    .flow-box:hover {
+        transform: translateY(-5px);
+        border-color: rgba(0, 212, 255, 0.2);
+        box-shadow: var(--shadow-hover);
+    }
+    .flow-box.npa-box {
+        border-color: rgba(239, 68, 68, 0.3);
+        background: rgba(239, 68, 68, 0.08);
+        color: var(--neon-red);
+        box-shadow: 0 10px 30px rgba(239, 68, 68, 0.15);
+    }
+    .flow-box.npa-box:hover {
+        box-shadow: 0 15px 40px rgba(239, 68, 68, 0.25);
+        transform: translateY(-5px) scale(1.02);
+    }
+    .flow-arrow { color: rgba(255,255,255,0.2); font-size: 1.8rem; }
+
+    .info-card {
+        background: var(--bg-card);
+        backdrop-filter: blur(16px);
+        border-radius: 16px;
+        border: 1px solid rgba(255,255,255,0.06);
+        padding: 2.5rem 2rem;
+        height: 100%;
+        box-shadow: var(--shadow-card);
+        transition: var(--transition);
+        text-align: center;
+        position: relative; overflow: hidden;
+    }
+    .info-card::before {
+        content: '';
+        position: absolute; top: 0; left: 0; right: 0; height: 3px;
+        background: linear-gradient(90deg, transparent, var(--neon-blue), transparent);
+        opacity: 0; transition: opacity 0.4s;
+    }
+    .info-card:hover {
+        transform: translateY(-10px);
+        box-shadow: var(--shadow-hover);
+        border-color: rgba(0, 212, 255, 0.15);
+    }
+    .info-card:hover::before { opacity: 1; }
+    .info-card h4 { color: #fff; }
+    .info-card p { color: var(--text-secondary); }
+
+    .info-icon {
+        font-size: 2.8rem; margin-bottom: 1.5rem;
+        display: inline-block; transition: transform 0.4s;
+    }
+    .info-card:hover .info-icon { transform: scale(1.15); }
+
+    .section-title {
+        color: #fff;
+        font-family: 'Outfit', sans-serif;
+        font-weight: 800;
+        text-align: center; margin-bottom: 2rem;
+        position: relative; padding-bottom: 1rem; font-size: 2rem;
+    }
+    .section-title::after {
+        content: '';
+        position: absolute; bottom: 0; left: 50%;
+        transform: translateX(-50%);
+        width: 60px; height: 3px;
+        background: linear-gradient(90deg, var(--neon-blue), var(--neon-purple));
+        border-radius: 2px;
+    }
+
+    .feature-card {
+        background: var(--bg-card);
+        backdrop-filter: blur(16px);
+        border-radius: 16px;
+        border: 1px solid rgba(255,255,255,0.06);
+        padding: 2.5rem;
+        height: 100%;
+        box-shadow: var(--shadow-card);
+        transition: var(--transition);
+    }
+    .feature-card:hover {
+        transform: translateY(-6px);
+        box-shadow: var(--shadow-hover);
+        border-color: rgba(0, 212, 255, 0.15);
+    }
+    .feature-card h4 { color: #fff; }
+    .feature-card p { color: var(--text-secondary); }
+    .feature-card strong { color: rgba(255,255,255,0.9); }
+    .feature-card .text-dark { color: rgba(255,255,255,0.9) !important; }
+    .feature-card .text-danger { color: var(--neon-red) !important; }
+    .feature-card .text-success { color: var(--neon-green) !important; }
+    .feature-card .border-bottom { border-color: rgba(255,255,255,0.06) !important; }
+</style>
+
+<!-- 1. HERO SECTION -->
+<div class="hero-section">
+    <div class="container animate-fade-up">
+        <h1 class="font-outfit display-4 mb-4" style="font-weight: 800; letter-spacing: -0.5px;">
+            Understanding <span class="highlight-keyword">Non-Performing Assets</span>
+        </h1>
+        <p class="lead mx-auto" style="max-width: 800px; font-size: 1.25rem; line-height: 1.6; color: rgba(255,255,255,0.45);">
+            A deep dive into the financial mechanics of <span style="color:#fff; font-weight:600;">NPA</span>, the <span style="color:#fff; font-weight:600;">Risk Vectors</span> they pose to institutional stability, and modern <span style="color:#fff; font-weight:600;">Banking</span> mitigation strategies.
+        </p>
+    </div>
+</div>
+
+<div class="container pb-5">
+
+    <!-- 2. FLOW DIAGRAM -->
+    <div class="animate-fade-up delay-1 mb-5 pb-4">
+        <h3 class="section-title">The NPA Lifecycle</h3>
+        <div class="flow-container pt-3">
+            <div class="flow-box"><i class="fa-solid fa-hand-holding-dollar mb-3 fs-2 d-block" style="color:var(--neon-green);"></i> Loan Issued</div>
+            <i class="fa-solid fa-arrow-right flow-arrow d-none d-lg-block"></i>
+            <i class="fa-solid fa-arrow-down flow-arrow d-block d-lg-none"></i>
+            <div class="flow-box"><i class="fa-solid fa-calendar-xmark mb-3 fs-2 d-block" style="color:var(--neon-amber);"></i> No Repayment</div>
+            <i class="fa-solid fa-arrow-right flow-arrow d-none d-lg-block"></i>
+            <i class="fa-solid fa-arrow-down flow-arrow d-block d-lg-none"></i>
+            <div class="flow-box"><i class="fa-solid fa-hourglass-end mb-3 fs-2 d-block" style="color:var(--neon-red);"></i> 90 Days Default</div>
+            <i class="fa-solid fa-arrow-right flow-arrow d-none d-lg-block" style="color:rgba(239,68,68,0.4);"></i>
+            <i class="fa-solid fa-arrow-down flow-arrow d-block d-lg-none" style="color:rgba(239,68,68,0.4);"></i>
+            <div class="flow-box npa-box"><i class="fa-solid fa-triangle-exclamation mb-3 fs-2 d-block"></i> NPA Classified</div>
+        </div>
+    </div>
+
+    <!-- 3. CARDS -->
+    <div class="row g-4 mb-5 pb-3 animate-fade-up delay-2">
+        <div class="col-lg-4">
+            <div class="info-card">
+                <i class="fa-solid fa-book-open-reader info-icon" style="color:var(--neon-blue);"></i>
+                <h4 class="font-outfit fw-bold mb-3">Executive Definition</h4>
+                <p style="line-height: 1.7; font-size: 1.05rem;">
+                    A Non-Performing Asset (NPA) is a loan or advance for which the principal or interest payment remained overdue for a continuous period of 90 days, ceasing to generate yield for the bank.
+                </p>
+            </div>
+        </div>
+        <div class="col-lg-4">
+            <div class="info-card">
+                <i class="fa-solid fa-chart-area info-icon" style="color:var(--neon-red);"></i>
+                <h4 class="font-outfit fw-bold mb-3" style="color:var(--neon-red) !important;">Primary Vectors</h4>
+                <p style="line-height: 1.7; font-size: 1.05rem;">
+                    NPAs are typically driven by poor individual repayment history, a disproportionately high principal burden relative to income, or broader systemic macroeconomic instability across sectors.
+                </p>
+            </div>
+        </div>
+        <div class="col-lg-4">
+            <div class="info-card">
+                <i class="fa-solid fa-building-columns info-icon" style="color:var(--neon-amber);"></i>
+                <h4 class="font-outfit fw-bold mb-3" style="color:var(--neon-amber) !important;">Banking Impact</h4>
+                <p style="line-height: 1.7; font-size: 1.05rem;">
+                    High NPA ratios directly erode institutional profitability, force mandatory capital provisioning, limit further credit expansion, and ultimately threaten depositor confidence.
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <!-- 4 & 5. REAL-WORLD & AI -->
+    <div class="row g-4 animate-fade-up delay-3">
+        <div class="col-lg-6">
+            <div class="feature-card" style="border-top: 3px solid rgba(239,68,68,0.5);">
+                <div class="d-flex align-items-center mb-4 pb-2 border-bottom">
+                    <div class="p-3 rounded-circle me-3" style="background:rgba(239,68,68,0.1);">
+                        <i class="fa-solid fa-briefcase fs-4" style="color:var(--neon-red);"></i>
+                    </div>
+                    <h4 class="font-outfit fw-bold mb-0">Real-World Case Example</h4>
+                </div>
+                <p class="mb-0" style="font-size: 1.1rem; line-height: 1.8;">
+                    A retail borrower is issued a structural loan but experiences unexpected financial distress. The borrower <strong>fails to satisfy scheduled EMI repayments</strong> for three consecutive months (90 days). Consequently, the core banking system automatically reclassifies the loan from a "Standard Asset" to a 
+                    <strong class="text-danger">Non-Performing Asset</strong>. The bank is now forced by the RBI to provision regulatory capital from its profits to cover the anticipated loss.
+                </p>
+            </div>
+        </div>
+        <div class="col-lg-6">
+            <div class="feature-card" style="border-top: 3px solid rgba(16,185,129,0.5);">
+                <div class="d-flex align-items-center mb-4 pb-2 border-bottom">
+                    <div class="p-3 rounded-circle me-3" style="background:rgba(16,185,129,0.1);">
+                        <i class="fa-solid fa-microchip fs-4" style="color:var(--neon-green);"></i>
+                    </div>
+                    <h4 class="font-outfit fw-bold mb-0">How AI Mitigates Risk</h4>
+                </div>
+                <p class="mb-0" style="font-size: 1.1rem; line-height: 1.8;">
+                    Traditional banking relies on retrospective reaction. This analytical portal leverages an advanced 
+                    <strong class="text-success">Random Forest Classification Algorithm</strong> to predict NPA risk probabilities <em>before</em> the critical 90-day default period occurs. By mathematically analyzing the nonlinear relationships between historical repayment, collateral liquidity, and principal balance, the AI empowers credit managers to take proactive mitigation strategies.
+                </p>
+            </div>
+        </div>
+    </div>
+
+</div>
+{% endblock %}

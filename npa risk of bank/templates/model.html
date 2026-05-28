@@ -1,0 +1,293 @@
+{% extends "base.html" %}
+{% block title %}ML Architecture | NPA Risk AI{% endblock %}
+
+{% block content %}
+<style>
+    .hero-section {
+        background: linear-gradient(-45deg, #020617, #0B192C, #0f172a, #1e1b4b);
+        background-size: 300% 300%;
+        animation: gradientShift 10s ease infinite;
+        color: white;
+        padding: 5.5rem 2rem;
+        text-align: center;
+        margin-bottom: 3.5rem;
+        border-bottom: 1px solid rgba(0, 212, 255, 0.15);
+        position: relative; overflow: hidden;
+    }
+    .hero-section::before {
+        content: '';
+        position: absolute; top: 0; left: 0; right: 0; bottom: 0;
+        background: radial-gradient(ellipse at 70% 30%, rgba(168, 85, 247, 0.05) 0%, transparent 60%);
+        pointer-events: none;
+    }
+    .hero-section .container { position: relative; z-index: 2; }
+
+    .info-card {
+        background: var(--bg-card);
+        backdrop-filter: blur(16px);
+        border-radius: 16px;
+        border: 1px solid rgba(255,255,255,0.06);
+        padding: 2.5rem;
+        height: 100%;
+        box-shadow: var(--shadow-card);
+        transition: var(--transition);
+        position: relative; overflow: hidden;
+    }
+    .info-card::before {
+        content: '';
+        position: absolute; top: 0; left: 0; right: 0; height: 3px;
+        background: linear-gradient(90deg, transparent, var(--neon-blue), transparent);
+        opacity: 0; transition: opacity 0.4s;
+    }
+    .info-card:hover {
+        transform: translateY(-6px);
+        box-shadow: var(--shadow-hover);
+        border-color: rgba(0, 212, 255, 0.15);
+    }
+    .info-card:hover::before { opacity: 1; }
+
+    .flow-container {
+        display: flex; align-items: center; justify-content: center;
+        flex-wrap: wrap; gap: 1.5rem;
+    }
+    .flow-box {
+        background: var(--bg-surface);
+        border: 1px solid rgba(255,255,255,0.08);
+        border-radius: 12px;
+        padding: 1.25rem 1.75rem;
+        font-weight: 700; font-size: 1rem;
+        color: rgba(255,255,255,0.75);
+        text-align: center;
+        transition: var(--transition);
+    }
+    .flow-box:hover {
+        transform: translateY(-3px);
+        border-color: rgba(0, 212, 255, 0.2);
+        box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+    }
+    .flow-box.highlight {
+        border-color: rgba(197, 160, 89, 0.3);
+        background: rgba(197, 160, 89, 0.06);
+        color: #fff;
+        box-shadow: 0 4px 15px rgba(197, 160, 89, 0.15);
+    }
+    .flow-arrow { color: rgba(255,255,255,0.15); font-size: 1.5rem; }
+
+    .feature-icon-box {
+        background: var(--bg-surface);
+        border: 1px solid rgba(255,255,255,0.06);
+        border-radius: 14px;
+        padding: 1.25rem;
+        text-align: center;
+        transition: var(--transition);
+        cursor: default;
+    }
+    .feature-icon-box b { color: rgba(255,255,255,0.7); }
+    .feature-icon-box:hover {
+        background: rgba(0, 212, 255, 0.1);
+        color: white;
+        transform: scale(1.08) translateY(-3px);
+        border-color: rgba(0, 212, 255, 0.3);
+        box-shadow: 0 8px 20px rgba(0, 212, 255, 0.15);
+    }
+    .feature-icon { font-size: 2rem; margin-bottom: 0.75rem; color: var(--neon-blue); transition: all 0.3s; }
+    .feature-icon-box:hover .feature-icon { color: #fff; text-shadow: 0 0 10px rgba(0,212,255,0.5); }
+    .feature-icon-box:hover b { color: #fff; }
+
+    .importance-bar {
+        height: 14px; border-radius: 8px;
+        background: rgba(255,255,255,0.06);
+        margin-top: 0.5rem; overflow: hidden;
+    }
+    .importance-fill {
+        height: 100%;
+        background: linear-gradient(90deg, var(--neon-blue), var(--neon-purple));
+        border-radius: 8px;
+    }
+
+    .section-title {
+        color: #fff;
+        font-family: 'Outfit', sans-serif;
+        font-weight: 800;
+        margin-bottom: 2rem;
+        font-size: 1.75rem;
+    }
+
+    /* List items */
+    .list-group-item {
+        background: transparent !important;
+        border-color: rgba(255,255,255,0.06) !important;
+        color: var(--text-secondary);
+    }
+    .list-group-item .text-muted { color: var(--text-muted) !important; }
+    .list-group-item .text-dark,
+    .list-group-item .fw-bold { color: rgba(255,255,255,0.9) !important; }
+
+    /* Badges */
+    .badge { font-size: 0.8rem; }
+
+    /* Benefits icons */
+    .benefit-wrap { transition: transform 0.4s; }
+    .benefit-wrap:hover { transform: scale(1.1) rotate(5deg); }
+
+    /* Override bootstrap text classes in dark context */
+    .info-card .text-muted { color: var(--text-muted) !important; }
+    .info-card .text-dark { color: rgba(255,255,255,0.85) !important; }
+    .info-card .fw-bold.text-dark { color: rgba(255,255,255,0.9) !important; }
+    .info-card .border-start, .info-card .border-end { border-color: rgba(255,255,255,0.06) !important; }
+    .info-card p.text-muted { color: var(--text-secondary) !important; }
+    .info-card h5 { color: #fff; }
+</style>
+
+<!-- 1. HERO SECTION -->
+<div class="hero-section">
+    <div class="container animate-fade-up">
+        <h1 class="font-outfit display-4 mb-3" style="font-weight: 800; letter-spacing: -0.5px;">Machine Learning Engine</h1>
+        <p class="lead mx-auto" style="font-size: 1.3rem; max-width: 600px; color:rgba(255,255,255,0.4);">
+            AI-driven NPA Risk Prediction System
+        </p>
+    </div>
+</div>
+
+<div class="container pb-5">
+
+    <!-- 2 & 3. OVERVIEW & PIPELINE FLOW -->
+    <div class="row g-4 mb-5 pb-3 animate-fade-up delay-1">
+        <div class="col-lg-5">
+            <div class="info-card">
+                <h3 class="section-title"><i class="fa-solid fa-microchip me-2" style="color:var(--neon-blue);"></i> Model Overview</h3>
+                <ul class="list-group list-group-flush mb-4 pb-2">
+                    <li class="list-group-item px-0 py-3 d-flex justify-content-between align-items-center">
+                        <span class="text-muted fw-bold text-uppercase" style="font-size: 0.85rem;">Algorithm</span>
+                        <span class="fw-bold fs-5" style="color:rgba(255,255,255,0.9);">Random Forest Classifier</span>
+                    </li>
+                    <li class="list-group-item px-0 py-3 d-flex justify-content-between align-items-center">
+                        <span class="text-muted fw-bold text-uppercase" style="font-size: 0.85rem;">Library</span>
+                        <span class="fw-bold fs-5" style="color:rgba(255,255,255,0.9);">Scikit-learn</span>
+                    </li>
+                    <li class="list-group-item px-0 py-3 d-flex justify-content-between align-items-center border-bottom-0">
+                        <span class="text-muted fw-bold text-uppercase" style="font-size: 0.85rem;">Core Purpose</span>
+                        <span class="fw-bold text-end" style="color:rgba(255,255,255,0.9);">Predict loan default (NPA)</span>
+                    </li>
+                </ul>
+                <div class="d-flex flex-wrap gap-3 justify-content-center">
+                    <span class="badge p-2 px-3" style="background:rgba(16,185,129,0.1); color:var(--neon-green); border:1px solid rgba(16,185,129,0.3);"><i class="fa-solid fa-check me-1"></i> High Accuracy</span>
+                    <span class="badge p-2 px-3" style="background:rgba(0,212,255,0.1); color:var(--neon-blue); border:1px solid rgba(0,212,255,0.3);"><i class="fa-solid fa-layer-group me-1"></i> Ensemble Learning</span>
+                    <span class="badge p-2 px-3" style="background:rgba(168,85,247,0.1); color:var(--neon-purple); border:1px solid rgba(168,85,247,0.3);"><i class="fa-solid fa-server me-1"></i> Production Ready</span>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-lg-7">
+            <div class="info-card d-flex flex-column justify-content-center">
+                <h3 class="section-title"><i class="fa-solid fa-code-branch me-2" style="color:var(--neon-blue);"></i> Decision Pipeline</h3>
+                <p class="mb-5" style="font-size: 1.15rem; line-height: 1.7; color:var(--text-secondary);">
+                    The model analyzes financial inputs and identifies underlying behavioral patterns using multiple statistical decision trees. It predicts whether a structural loan will default and provides an exact probabilistic confidence metric.
+                </p>
+                <div class="flow-container py-2">
+                    <div class="flow-box">User Input</div>
+                    <i class="fa-solid fa-arrow-right flow-arrow d-none d-lg-block"></i>
+                    <i class="fa-solid fa-arrow-down flow-arrow d-block d-lg-none"></i>
+                    <div class="flow-box">Data Processing</div>
+                    <i class="fa-solid fa-arrow-right flow-arrow d-none d-lg-block"></i>
+                    <i class="fa-solid fa-arrow-down flow-arrow d-block d-lg-none"></i>
+                    <div class="flow-box">Label Encoding</div>
+                    <i class="fa-solid fa-arrow-right flow-arrow d-none d-lg-block"></i>
+                    <i class="fa-solid fa-arrow-down flow-arrow d-block d-lg-none"></i>
+                    <div class="flow-box highlight"><i class="fa-solid fa-wand-magic-sparkles me-2" style="color:var(--neon-gold);"></i>Model Prediction</div>
+                    <i class="fa-solid fa-arrow-right flow-arrow d-none d-lg-block" style="color:rgba(0,212,255,0.3);"></i>
+                    <i class="fa-solid fa-arrow-down flow-arrow d-block d-lg-none" style="color:rgba(0,212,255,0.3);"></i>
+                    <div class="flow-box" style="border-bottom: 3px solid rgba(239,68,68,0.5);">Risk Output</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 4 & 5. FEATURES & IMPORTANCE -->
+    <div class="row g-4 mb-5 pb-3 animate-fade-up delay-2">
+        <div class="col-lg-6">
+            <div class="info-card">
+                <h3 class="section-title"><i class="fa-solid fa-list-check me-2" style="color:var(--neon-blue);"></i> Feature Extraction Vector</h3>
+                <p class="mb-4 pb-2" style="font-size:1.05rem; color:var(--text-secondary);">The Random Forest mathematically evaluates six distinct client dimensions.</p>
+                <div class="row g-3">
+                    <div class="col-4"><div class="feature-icon-box"><i class="fa-solid fa-money-bills feature-icon"></i><br><b style="font-size:0.9rem;">Loan Amount</b></div></div>
+                    <div class="col-4"><div class="feature-icon-box"><i class="fa-solid fa-briefcase feature-icon"></i><br><b style="font-size:0.9rem;">Loan Type</b></div></div>
+                    <div class="col-4"><div class="feature-icon-box"><i class="fa-solid fa-gauge-high feature-icon"></i><br><b style="font-size:0.9rem;">Credit Score</b></div></div>
+                    <div class="col-4"><div class="feature-icon-box"><i class="fa-solid fa-clock-rotate-left feature-icon"></i><br><b style="font-size:0.9rem;">Repayment</b></div></div>
+                    <div class="col-4"><div class="feature-icon-box"><i class="fa-solid fa-house-chimney feature-icon"></i><br><b style="font-size:0.9rem;">Collateral</b></div></div>
+                    <div class="col-4"><div class="feature-icon-box"><i class="fa-regular fa-calendar-days feature-icon"></i><br><b style="font-size:0.9rem;">Tenure</b></div></div>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-6">
+            <div class="info-card">
+                <h3 class="section-title"><i class="fa-solid fa-chart-bar me-2" style="color:var(--neon-blue);"></i> Feature Importance</h3>
+                <p class="mb-4 pb-2" style="font-size:1.05rem; color:var(--text-secondary);">The impact factor of each parameter used inside the NPA risk classification node.</p>
+                <div class="mb-4">
+                    <div class="d-flex justify-content-between mb-1"><span class="fw-bold fs-5" style="color:#fff;">Credit Score</span><span class="badge" style="background:rgba(239,68,68,0.15); color:var(--neon-red);">Highest</span></div>
+                    <div class="importance-bar"><div class="importance-fill" style="width: 38%; background: linear-gradient(90deg, var(--neon-amber), var(--neon-red));"></div></div>
+                </div>
+                <div class="mb-4">
+                    <div class="d-flex justify-content-between mb-1"><span class="fw-bold" style="color:rgba(255,255,255,0.85);">Repayment History</span><span style="color:var(--text-muted); font-weight:700;">Strong</span></div>
+                    <div class="importance-bar"><div class="importance-fill" style="width: 25%;"></div></div>
+                </div>
+                <div class="mb-4">
+                    <div class="d-flex justify-content-between mb-1"><span class="fw-bold" style="color:rgba(255,255,255,0.85);">Loan Amount</span><span style="color:var(--text-muted); font-weight:700;">Moderate</span></div>
+                    <div class="importance-bar"><div class="importance-fill" style="width: 18%;"></div></div>
+                </div>
+                <div class="mb-4">
+                    <div class="d-flex justify-content-between mb-1"><span class="fw-bold" style="color:rgba(255,255,255,0.85);">Collateral Value</span><span style="color:var(--text-muted); font-weight:700;">Moderate</span></div>
+                    <div class="importance-bar"><div class="importance-fill" style="width: 10%;"></div></div>
+                </div>
+                <div class="mb-4">
+                    <div class="d-flex justify-content-between mb-1"><span class="fw-bold" style="color:rgba(255,255,255,0.85);">Loan Tenure</span><span style="color:var(--text-muted); font-weight:700;">Low</span></div>
+                    <div class="importance-bar"><div class="importance-fill" style="width: 6%;"></div></div>
+                </div>
+                <div class="mb-2">
+                    <div class="d-flex justify-content-between mb-1"><span class="fw-bold" style="color:rgba(255,255,255,0.85);">Loan Type</span><span style="color:var(--text-muted); font-weight:700;">Minimal</span></div>
+                    <div class="importance-bar"><div class="importance-fill" style="width: 3%;"></div></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 6, 7. AI BENEFITS -->
+    <div class="row g-4 pt-2 animate-fade-up delay-3">
+        <div class="col-12">
+            <div class="info-card" style="border-top: 3px solid rgba(16,185,129,0.5);">
+                <h3 class="section-title text-center mb-5"><i class="fa-solid fa-shield-halved me-2" style="color:var(--neon-green);"></i> Strategic AI Returns</h3>
+                <div class="row g-4 align-items-stretch">
+                    <div class="col-md-4">
+                        <div class="text-center px-4 h-100">
+                            <div class="benefit-wrap d-inline-block p-4 rounded-circle mb-4" style="background:rgba(16,185,129,0.1);">
+                                <i class="fa-solid fa-eye fs-2" style="color:var(--neon-green);"></i>
+                            </div>
+                            <h5 class="fw-bold mb-3 fs-4">Early Risk Detection</h5>
+                            <p class="mb-0" style="font-size: 1.05rem; line-height: 1.7; color:var(--text-secondary);">Identifies toxic assets and likely defaulters months before actual 90-day non-payment occurs.</p>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="text-center px-4 h-100" style="border-left:1px solid rgba(255,255,255,0.06); border-right:1px solid rgba(255,255,255,0.06);">
+                            <div class="benefit-wrap d-inline-block p-4 rounded-circle mb-4" style="background:rgba(0,212,255,0.1);">
+                                <i class="fa-solid fa-scale-balanced fs-2" style="color:var(--neon-blue);"></i>
+                            </div>
+                            <h5 class="fw-bold mb-3 fs-4">Better Decision Making</h5>
+                            <p class="mb-0" style="font-size: 1.05rem; line-height: 1.7; color:var(--text-secondary);">Replaces emotional or biased human approvals with pure mathematical objectivity.</p>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="text-center px-4 h-100">
+                            <div class="benefit-wrap d-inline-block p-4 rounded-circle mb-4" style="background:rgba(245,158,11,0.1);">
+                                <i class="fa-solid fa-arrow-trend-down fs-2" style="color:var(--neon-amber);"></i>
+                            </div>
+                            <h5 class="fw-bold mb-3 fs-4">Reduced Financial Loss</h5>
+                            <p class="mb-0" style="font-size: 1.05rem; line-height: 1.7; color:var(--text-secondary);">Decreases the Capital Adequacy Ratio (CAR) strain by preemptively declining structurally weak advances.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+{% endblock %}

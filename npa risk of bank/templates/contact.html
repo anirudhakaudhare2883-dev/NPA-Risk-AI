@@ -1,0 +1,206 @@
+{% extends "base.html" %}
+{% block title %}Developer Contact | Bhat Bank AI{% endblock %}
+
+{% block content %}
+<style>
+    .contact-hero {
+        background: linear-gradient(-45deg, #020617, #0B192C, #0f172a, #1e1b4b);
+        background-size: 300% 300%;
+        animation: gradientShift 10s ease infinite;
+        text-align: center;
+        padding: 4rem 0 3rem 0;
+        margin-bottom: 2rem;
+        position: relative;
+    }
+    .contact-hero::after {
+        content: '';
+        width: 60px;
+        height: 3px;
+        background: linear-gradient(90deg, var(--neon-blue), var(--neon-purple));
+        display: block;
+        margin: 1.5rem auto 0;
+        border-radius: 2px;
+    }
+    .contact-hero h1 {
+        font-family: 'Outfit', sans-serif;
+        font-size: 2.8rem;
+        font-weight: 800;
+        background: linear-gradient(135deg, #fff 0%, var(--neon-blue) 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+    }
+    .contact-hero p {
+        color: rgba(255,255,255,0.5);
+        font-size: 1.05rem;
+        max-width: 600px;
+        margin: 0.5rem auto 0;
+    }
+
+    .contact-card {
+        background: rgba(15, 23, 42, 0.85);
+        backdrop-filter: blur(16px);
+        -webkit-backdrop-filter: blur(16px);
+        border: 1px solid rgba(0, 212, 255, 0.1);
+        border-radius: 16px;
+        padding: 2.25rem;
+        transition: all 0.3s;
+    }
+    .contact-card:hover {
+        border-color: rgba(0, 212, 255, 0.25);
+        box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+    }
+    .contact-card h3 {
+        color: #fff;
+        font-family: 'Outfit', sans-serif;
+    }
+    .contact-card .list-group-item {
+        background: transparent;
+        border-color: rgba(255,255,255,0.06);
+        color: rgba(255,255,255,0.65);
+    }
+    .contact-card .list-group-item strong {
+        color: rgba(255,255,255,0.9);
+    }
+    .contact-card .text-gold-dark { color: var(--neon-blue) !important; }
+
+    .contact-panel-header i { color: var(--neon-blue) !important; }
+    .contact-panel-header h4 { color: #fff !important; font-family: 'Outfit', sans-serif !important; }
+
+    .contact-stack-item {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        padding: 1rem 1.25rem;
+        background: rgba(255,255,255,0.03);
+        border: 1px solid rgba(255,255,255,0.06);
+        border-radius: 12px;
+        margin-bottom: 0.75rem;
+        transition: all 0.2s;
+    }
+    .contact-stack-item:hover {
+        background: rgba(0, 212, 255, 0.05);
+        border-color: rgba(0, 212, 255, 0.15);
+    }
+    .contact-stack-item i { font-size: 1.5rem; color: var(--neon-blue); width: 30px; text-align: center; }
+    .contact-stack-item strong { color: rgba(255,255,255,0.85); }
+
+    .contact-page-bg {
+        background: #020617;
+        margin: -2.5rem -1.5rem;
+        padding: 0 1.5rem 4rem 1.5rem;
+    }
+
+    .contact-btn-action {
+        background: transparent;
+        color: var(--neon-blue);
+        border: 1px solid rgba(0, 212, 255, 0.3);
+        padding: 0.85rem 2rem;
+        border-radius: 12px;
+        font-size: 1rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        cursor: pointer;
+        transition: all 0.3s;
+        width: 100%;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.5rem;
+        text-decoration: none;
+    }
+    .contact-btn-action:hover {
+        background: rgba(0, 212, 255, 0.1);
+        border-color: var(--neon-blue);
+        color: #fff;
+        box-shadow: 0 0 20px rgba(0, 212, 255, 0.15);
+    }
+
+    .contact-project-box {
+        padding: 1.25rem;
+        background: rgba(255,255,255,0.03);
+        border: 1px solid rgba(255,255,255,0.08);
+        border-radius: 12px;
+    }
+    .contact-project-box strong { color: #fff; }
+    .contact-project-box small { color: rgba(255,255,255,0.45); }
+</style>
+
+<div class="contact-page-bg">
+    <div class="contact-hero animate-fade-up">
+        <h1>Project Contact & Details</h1>
+        <p>MSc Computer Science / Machine Learning Project Submission under Bhat Bank conceptual framing.</p>
+    </div>
+
+    <div class="row justify-content-center g-4 px-2">
+        <!-- Left Column: Developer Details -->
+        <div class="col-lg-5">
+            <div class="contact-card animate-fade-up delay-1" style="border-top: 3px solid rgba(197, 160, 89, 0.5);">
+                <div class="text-center mb-4">
+                    <div style="width:70px; height:70px; margin:0 auto; border-radius:50%; background:rgba(0,212,255,0.1); display:flex; align-items:center; justify-content:center;">
+                        <i class="fa-solid fa-user-tie" style="font-size:2rem; color:var(--neon-blue);"></i>
+                    </div>
+                </div>
+                <h3 class="text-center fw-bold mb-1">Anirudha Kaudhare</h3>
+                <p class="text-center mb-4" style="color:rgba(255,255,255,0.4); letter-spacing:1px; font-size:0.85rem; text-transform:uppercase;">MSc Computer Science / AI specialisation</p>
+                
+                <ul class="list-group list-group-flush mb-4" style="font-size: 1.05rem;">
+                    <li class="list-group-item d-flex justify-content-between px-0">
+                        <span><i class="fa-solid fa-id-badge me-2 text-gold-dark"></i> Roll Number:</span> 
+                        <strong>332</strong>
+                    </li>
+                    <li class="list-group-item d-flex justify-content-between px-0">
+                        <span><i class="fa-solid fa-building-columns me-2 text-gold-dark"></i> College:</span> 
+                        <strong>Guru Nanak Khalsa College, Matunga</strong>
+                    </li>
+                    <li class="list-group-item d-flex justify-content-between border-0 px-0">
+                        <span><i class="fa-brands fa-github me-2 text-gold-dark"></i> Version Control:</span> 
+                        <strong>github.com/anirudhakaudhare2883-dev</strong>
+                    </li>
+                </ul>
+
+                <div class="text-center mt-3">
+                    <a href="https://www.linkedin.com/in/anirudha-kaudhare/" target="_blank" class="contact-btn-action">
+                        <i class="fa-brands fa-linkedin me-2"></i> Professional Network
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Right Column: Project Details -->
+        <div class="col-lg-5">
+            <div class="contact-card animate-fade-up delay-2">
+                <div class="d-flex align-items-center gap-3 border-bottom pb-3 mb-4 contact-panel-header" style="border-color:rgba(255,255,255,0.06) !important;">
+                    <i class="fa-solid fa-layer-group" style="font-size:1.3rem;"></i>
+                    <h4 class="mb-0 fw-bold" style="font-size:1.2rem;">Project Documentation</h4>
+                </div>
+                
+                <div class="mb-4 mt-2">
+                    <h6 class="fw-bold mb-3" style="color:rgba(255,255,255,0.4); letter-spacing:1px; font-size:0.8rem; text-transform:uppercase;">Project Title</h6>
+                    <div class="contact-project-box">
+                        <strong class="d-block fs-5 mb-1" style="font-family:'Outfit',sans-serif;">NPA Prediction System</strong>
+                        <small>A Machine Learning-driven web application to predict Non-Performing Assets (NPA) and automate risk assessments based on historical financial behaviors, designed to mitigate potential banking defaults.</small>
+                    </div>
+                </div>
+
+                <div class="mb-0">
+                    <h6 class="fw-bold mb-3" style="color:rgba(255,255,255,0.4); letter-spacing:1px; font-size:0.8rem; text-transform:uppercase;">Core Stack</h6>
+                    <div class="contact-stack-item">
+                        <i class="fa-solid fa-server"></i>
+                        <strong>Flask WSGI Backend</strong>
+                    </div>
+                    <div class="contact-stack-item">
+                        <i class="fa-solid fa-brain"></i>
+                        <strong>Scikit-learn (Random Forest)</strong>
+                    </div>
+                    <div class="contact-stack-item">
+                        <i class="fa-brands fa-bootstrap"></i>
+                        <strong>Bootstrap 5 + Chart.js</strong>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

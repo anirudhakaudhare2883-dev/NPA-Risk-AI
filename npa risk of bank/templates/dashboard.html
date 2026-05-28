@@ -1,0 +1,245 @@
+{% extends "base.html" %}
+{% block title %}Enterprise Analytics | NPA Risk AI{% endblock %}
+
+{% block content %}
+<style>
+    .bi-card {
+        background: var(--bg-card);
+        backdrop-filter: blur(16px);
+        border: 1px solid rgba(255,255,255,0.06);
+        border-radius: 14px;
+        box-shadow: var(--shadow-card);
+        padding: 1.5rem;
+        margin-bottom: 1rem;
+        transition: var(--transition);
+        height: 100%;
+    }
+    .bi-card:hover {
+        transform: translateY(-3px);
+        box-shadow: var(--shadow-hover);
+        border-color: rgba(0, 212, 255, 0.15);
+    }
+
+    .kpi-title { font-size: 0.8rem; color: var(--text-muted); font-weight: 700; text-transform: uppercase; margin-bottom: 0.5rem; letter-spacing: 0.5px; }
+    .kpi-value { font-size: 2rem; font-weight: 800; color: #fff; line-height: 1; }
+    .kpi-icon { font-size: 2.2rem; opacity: 0.8; }
+
+    .chart-container { position: relative; height: 320px; width: 100%; }
+    .bi-header {
+        font-size: 1.05rem; font-weight: 700; color: #fff; margin-bottom: 1.25rem;
+        display: flex; align-items: center; gap: 0.5rem;
+        border-bottom: 1px solid rgba(255,255,255,0.06); padding-bottom: 0.75rem;
+    }
+
+    .insight-item {
+        padding: 1.25rem; border-left: 4px solid rgba(255,255,255,0.1);
+        background: var(--bg-surface); margin-bottom: 1rem;
+        border-radius: 0 8px 8px 0; display: flex; align-items: flex-start; gap: 1rem;
+    }
+    .insight-item.danger { border-left-color: var(--neon-red); background: rgba(239, 68, 68, 0.06); }
+    .insight-item.warning { border-left-color: var(--neon-amber); background: rgba(245, 158, 11, 0.06); }
+    .insight-item.safe { border-left-color: var(--neon-green); background: rgba(16, 185, 129, 0.06); }
+    .insight-text { font-size: 0.95rem; font-weight: 500; color: var(--text-secondary); margin-top: 2px; }
+
+    .bi-table th {
+        background: rgba(255,255,255,0.03); font-size: 0.75rem; text-transform: uppercase;
+        color: var(--text-muted); font-weight: 700;
+        border-bottom: 1px solid rgba(255,255,255,0.08) !important; padding: 1rem;
+    }
+    .bi-table td {
+        font-size: 0.9rem; vertical-align: middle; padding: 1rem;
+        border-bottom: 1px solid rgba(255,255,255,0.04) !important; color: var(--text-secondary);
+    }
+    .bi-table tr:hover td { background: rgba(0, 212, 255, 0.03); }
+
+    .dash-header-bar {
+        background: var(--bg-card);
+        backdrop-filter: blur(16px);
+        border-bottom: 1px solid rgba(255,255,255,0.06);
+        box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+    }
+
+    ::-webkit-scrollbar { width: 6px; height: 6px; }
+    ::-webkit-scrollbar-track { background: rgba(255,255,255,0.03); }
+    ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 4px; }
+    ::-webkit-scrollbar-thumb:hover { background: rgba(255,255,255,0.2); }
+</style>
+
+<div class="container-fluid px-4 py-4 mb-4 dash-header-bar">
+    <div class="d-flex justify-content-between align-items-center animate-fade-up">
+        <div>
+            <h2 class="font-outfit fw-bold mb-1" style="color: #fff;"><i class="fa-solid fa-chart-line" style="color:var(--neon-blue);"></i> Enterprise Risk Analytics</h2>
+            <p class="mb-0" style="font-size: 1rem; color:var(--text-muted);">NPA Prediction & Banking Risk Insights</p>
+        </div>
+        <div>
+            <span class="badge p-2 px-3 text-uppercase" style="background:rgba(16,185,129,0.1); color:var(--neon-green); border:1px solid rgba(16,185,129,0.2); letter-spacing: 1px; border-radius: 8px;">
+                <i class="fa-solid fa-circle me-2" style="font-size:8px; color:var(--neon-green);"></i> Live Data Connection
+            </span>
+        </div>
+    </div>
+</div>
+
+<div class="container-fluid px-4 pb-5">
+    
+    <!-- 1. KPI Cards Row -->
+    <div class="row g-4 mb-4 animate-fade-up">
+        <div class="col"><div class="bi-card d-flex justify-content-between align-items-center p-4">
+            <div><div class="kpi-title">Total Processed Loans</div><div class="kpi-value" id="kpi_loans">-</div></div>
+            <i class="fa-solid fa-file-invoice-dollar kpi-icon" style="color: var(--neon-blue);"></i>
+        </div></div>
+        <div class="col"><div class="bi-card d-flex justify-content-between align-items-center p-4">
+            <div><div class="kpi-title">Identified Defaults</div><div class="kpi-value" id="kpi_defaults" style="color:var(--neon-red);">-</div></div>
+            <i class="fa-solid fa-triangle-exclamation kpi-icon" style="color:var(--neon-red);"></i>
+        </div></div>
+        <div class="col"><div class="bi-card d-flex justify-content-between align-items-center p-4" style="border-bottom: 3px solid rgba(239,68,68,0.5);">
+            <div><div class="kpi-title">Systemic NPA Ratio (%)</div><div class="kpi-value" id="kpi_ratio" style="color:var(--neon-red);">-</div></div>
+            <i class="fa-solid fa-percent kpi-icon" style="color:var(--neon-red);"></i>
+        </div></div>
+        <div class="col"><div class="bi-card d-flex justify-content-between align-items-center p-4">
+            <div><div class="kpi-title">Average Credit Score</div><div class="kpi-value" id="kpi_credit" style="color:var(--neon-green);">-</div></div>
+            <i class="fa-solid fa-gauge-high kpi-icon" style="color:var(--neon-green);"></i>
+        </div></div>
+        <div class="col"><div class="bi-card d-flex justify-content-between align-items-center p-4" style="border-right: 3px solid rgba(0,212,255,0.4);">
+            <div><div class="kpi-title">Average Principal</div><div class="kpi-value" id="kpi_amount" style="font-size: 1.5rem;">-</div></div>
+            <i class="fa-solid fa-building-columns kpi-icon" style="color: var(--neon-purple);"></i>
+        </div></div>
+    </div>
+
+    <!-- 2. Main Charts Row -->
+    <div class="row g-4 mb-4 animate-fade-up delay-1">
+        <div class="col-lg-6">
+            <div class="bi-card">
+                <div class="bi-header"><i class="fa-solid fa-chart-column" style="color:var(--neon-blue);"></i> Default Distribution by Loan Sector</div>
+                <div class="chart-container"><canvas id="chartLoanType"></canvas></div>
+            </div>
+        </div>
+        <div class="col-lg-3">
+            <div class="bi-card">
+                <div class="bi-header"><i class="fa-solid fa-chart-pie" style="color:var(--neon-green);"></i> Asset Viability</div>
+                <div class="chart-container"><canvas id="chartDonut"></canvas></div>
+            </div>
+        </div>
+        <div class="col-lg-3">
+            <div class="bi-card">
+                <div class="bi-header"><i class="fa-solid fa-signal" style="color:var(--neon-amber);"></i> Credit Distribution</div>
+                <div class="chart-container"><canvas id="chartCredit"></canvas></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 3. Insights and Table Row -->
+    <div class="row g-4 animate-fade-up delay-2">
+        <div class="col-lg-4">
+            <div class="bi-card">
+                <div class="bi-header"><i class="fa-solid fa-brain" style="color:var(--neon-amber);"></i> Key Intelligent Insights</div>
+                <div id="insightsContainer" class="mt-2" style="max-height: 250px; overflow-y: auto;">
+                    <div class="text-center py-5" style="color:var(--text-muted);"><div class="spinner-border spinner-border-sm me-2" style="color:var(--neon-blue);"></div> Extracting Intelligence...</div>
+                </div>
+                
+                <div class="bi-header mt-4 pt-3"><i class="fa-solid fa-list-ol" style="color:var(--neon-purple);"></i> ML Feature Importance</div>
+                <div class="chart-container" style="height: 180px;"><canvas id="chartImportance"></canvas></div>
+            </div>
+        </div>
+        <div class="col-lg-8">
+            <div class="bi-card">
+                <div class="bi-header"><i class="fa-solid fa-table" style="color:var(--text-muted);"></i> Sector Summary Matrix</div>
+                <div class="table-responsive">
+                    <table class="table table-hover table-borderless bi-table mb-0 w-100">
+                        <thead>
+                            <tr>
+                                <th>Loan Type</th>
+                                <th>Total Loans</th>
+                                <th>Default Count</th>
+                                <th>Avg Credit Score</th>
+                                <th>Avg Principal (&#8377;)</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tableBody">
+                            <tr><td colspan="5" class="text-center py-5" style="color:var(--text-muted);">Retrieving Dataset...</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    // Dark Theme Chart Config
+    Chart.defaults.color = 'rgba(255,255,255,0.45)';
+    Chart.defaults.font.family = 'Inter';
+    Chart.defaults.scale.grid.color = 'rgba(255, 255, 255, 0.04)';
+    Chart.defaults.scale.grid.borderColor = 'rgba(255, 255, 255, 0.06)';
+    Chart.defaults.scale.ticks.color = 'rgba(255,255,255,0.35)';
+
+    const defaultOptions = {
+        responsive: true, maintainAspectRatio: false,
+        plugins: { legend: { position: 'bottom', labels: { boxWidth: 12, color: 'rgba(255,255,255,0.5)', usePointStyle: true, padding: 20 } } }
+    };
+
+    let c1, c2, c3, c4;
+
+    function initCharts() {
+        c1 = new Chart(document.getElementById('chartLoanType'), { type: 'bar', options: {...defaultOptions, scales:{y:{stacked:true, border:{display:false}}, x:{stacked:true, border:{display:false}}}} });
+        c2 = new Chart(document.getElementById('chartDonut'), { type: 'doughnut', options: {...defaultOptions, cutout: '75%', elements:{arc:{borderWidth:2, borderColor:'#0f172a'}}} });
+        c3 = new Chart(document.getElementById('chartCredit'), { type: 'bar', options: {...defaultOptions, scales:{y:{stacked:true}, x:{stacked:true}}} });
+        c4 = new Chart(document.getElementById('chartImportance'), { type: 'bar', options: {...defaultOptions, indexAxis:'y', plugins:{legend:{display:false}}} });
+    }
+
+    document.addEventListener("DOMContentLoaded", () => {
+        initCharts();
+        
+        fetch('/api/dashboard_data')
+            .then(res => res.json())
+            .then(data => {
+                if(data.error) { console.error(data.error); return; }
+
+                // KPIs
+                document.getElementById('kpi_loans').innerText = data.kpis.total_loans;
+                document.getElementById('kpi_defaults').innerText = data.kpis.total_defaults;
+                document.getElementById('kpi_ratio').innerText = data.kpis.npa_ratio + '%';
+                document.getElementById('kpi_credit').innerText = data.kpis.avg_credit;
+                document.getElementById('kpi_amount').innerText = '\u20B9' + data.kpis.avg_loan;
+
+                // Charts
+                c1.data = { labels: data.charts.loan_type.labels, datasets: [
+                    { label: 'Good Standing', data: data.charts.loan_type.safe, backgroundColor: 'rgba(16, 185, 129, 0.7)', borderRadius: 4, borderWidth: 0 },
+                    { label: 'Defaulted', data: data.charts.loan_type.default, backgroundColor: 'rgba(239, 68, 68, 0.7)', borderRadius: 4, borderWidth: 0 }
+                ]}; c1.update();
+
+                c2.data = { labels: data.charts.donut.labels, datasets: [{ data: data.charts.donut.values, backgroundColor: ['rgba(16, 185, 129, 0.8)', 'rgba(239, 68, 68, 0.8)'] }]}; c2.update();
+
+                c3.data = { labels: data.charts.credit_dist.labels, datasets: [
+                    { label: 'Safe', data: data.charts.credit_dist.safe, backgroundColor: 'rgba(16, 185, 129, 0.6)', borderRadius: 4, borderWidth: 0 },
+                    { label: 'Default', data: data.charts.credit_dist.default, backgroundColor: 'rgba(239, 68, 68, 0.7)', borderRadius: 4, borderWidth: 0 }
+                ]}; c3.update();
+
+                c4.data = { labels: data.charts.importance.labels, datasets: [{ label: 'Imp %', data: data.charts.importance.values, backgroundColor: 'rgba(0, 212, 255, 0.5)', borderRadius: 4 }] }; c4.update();
+
+                // Insights
+                document.getElementById('insightsContainer').innerHTML = data.insights.map(i => `
+                    <div class="insight-item ${i.type}">
+                        <div style="font-size:1.5rem;"><i class="${i.icon}"></i></div>
+                        <div class="insight-text">${i.text}</div>
+                    </div>
+                `).join('');
+
+                // Table
+                document.getElementById('tableBody').innerHTML = data.table.map(r => `
+                    <tr>
+                        <td class="fw-bold" style="color:#fff;">${r.type} Sector</td>
+                        <td class="fw-bold" style="color:rgba(255,255,255,0.7);">${r.total.toLocaleString()}</td>
+                        <td class="fw-bold" style="color:var(--neon-red);">${r.defaults.toLocaleString()}</td>
+                        <td class="fw-semibold" style="color:var(--neon-green);">${r.avg_credit}</td>
+                        <td class="fw-bold" style="color:rgba(255,255,255,0.7);">${r.avg_loan}</td>
+                    </tr>
+                `).join('');
+            })
+            .catch(e => console.error(e));
+    });
+</script>
+{% endblock %}
